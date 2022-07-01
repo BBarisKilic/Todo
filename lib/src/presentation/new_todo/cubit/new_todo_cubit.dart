@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -37,7 +36,7 @@ class NewTodoCubit extends Cubit<NewTodoState> {
     context.pop();
   }
 
-  Future<void> onPressedSaveButton(BuildContext context) async {
+  Future<void> onPressedSaveButton(BuildContext context, bool mounted) async {
     final task = Task(
       title: _titleEditingController.text,
       description: _descriptionEditingController.text,
@@ -48,6 +47,7 @@ class NewTodoCubit extends Cubit<NewTodoState> {
         await _addNewTaskUseCase(params: AddTaskParams(task: task));
 
     if (dataState is DataFailure) return;
+    if (!mounted) return;
 
     context.read<TodoCubit>().loadTasks();
     onTapBackButton(context);
