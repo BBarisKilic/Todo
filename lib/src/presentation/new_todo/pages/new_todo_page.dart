@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/core.dart';
+import '../../presentation.dart';
 import '../new_todo.dart';
 
-class NewTodoPage extends StatelessWidget {
+class NewTodoPage extends StatefulWidget {
   const NewTodoPage({Key? key}) : super(key: key);
 
+  @override
+  State<NewTodoPage> createState() => _NewTodoPageState();
+}
+
+class _NewTodoPageState extends State<NewTodoPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: CustomAppBar(
@@ -42,8 +48,9 @@ class NewTodoPage extends StatelessWidget {
                 ),
                 const SizedBox(height: kVerticalSpace),
                 SaveButton(
-                  onPressed: () =>
-                      context.read<NewTodoCubit>().onPressedSaveButton(context),
+                  onPressed: () => context
+                      .read<NewTodoCubit>()
+                      .onPressedSaveButton(context, mounted),
                 ),
               ],
             ),
