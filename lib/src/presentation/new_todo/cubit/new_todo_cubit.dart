@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/core.dart';
 import '../../../domain/domain.dart';
-import '../../presentation.dart';
 
 part 'new_todo_state.dart';
 part 'new_todo_cubit.freezed.dart';
@@ -36,7 +35,7 @@ class NewTodoCubit extends Cubit<NewTodoState> {
     context.pop();
   }
 
-  Future<void> onPressedSaveButton(BuildContext context, bool mounted) async {
+  Future<bool> onPressedSaveButton(BuildContext context) async {
     final task = Task(
       title: _titleEditingController.text,
       description: _descriptionEditingController.text,
@@ -46,10 +45,8 @@ class NewTodoCubit extends Cubit<NewTodoState> {
     final dataState =
         await _addNewTaskUseCase(params: AddTaskParams(task: task));
 
-    if (dataState is DataFailure) return;
-    if (!mounted) return;
+    if (dataState is DataFailure) return false;
 
-    context.read<TodoCubit>().loadTasks();
-    onTapBackButton(context);
+    return true;
   }
 }

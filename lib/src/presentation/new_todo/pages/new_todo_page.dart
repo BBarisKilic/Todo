@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/core.dart';
 import '../../presentation.dart';
-import '../new_todo.dart';
 
 class NewTodoPage extends StatefulWidget {
   const NewTodoPage({Key? key}) : super(key: key);
@@ -48,9 +47,15 @@ class _NewTodoPageState extends State<NewTodoPage> {
                 ),
                 const SizedBox(height: kVerticalSpace),
                 SaveButton(
-                  onPressed: () => context
-                      .read<NewTodoCubit>()
-                      .onPressedSaveButton(context, mounted),
+                  onPressed: () async {
+                    final shouldContinue = await context
+                        .read<NewTodoCubit>()
+                        .onPressedSaveButton(context);
+                    if (!shouldContinue) return;
+                    if (!mounted) return;
+                    context.read<TodoCubit>().loadTasks();
+                    context.read<NewTodoCubit>().onTapBackButton(context);
+                  },
                 ),
               ],
             ),
