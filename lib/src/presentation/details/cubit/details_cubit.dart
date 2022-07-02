@@ -51,7 +51,7 @@ class DetailsCubit extends Cubit<DetailsState> {
     context.pop();
   }
 
-  Future<void> onPressedSaveButton(BuildContext context) async {
+  Future<bool> onPressedSaveButton(BuildContext context) async {
     final task = Task(
       id: _id,
       title: _titleEditingController.text,
@@ -62,10 +62,9 @@ class DetailsCubit extends Cubit<DetailsState> {
     final dataState =
         await _updateTaskUseCase(params: UpdateTaskParams(task: task));
 
-    if (dataState is DataFailure) return;
+    if (dataState is DataFailure) return false;
 
-    context.read<TodoCubit>().loadTasks();
-    onTapBackButton(context);
+    return true;
   }
 
   void onToggleStatus() => _isCompleted = !_isCompleted;

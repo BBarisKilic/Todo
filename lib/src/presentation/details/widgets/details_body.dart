@@ -5,9 +5,14 @@ import '../../../core/core.dart';
 import '../../presentation.dart';
 import 'activation_container.dart';
 
-class DetailsBody extends StatelessWidget {
+class DetailsBody extends StatefulWidget {
   const DetailsBody({Key? key}) : super(key: key);
 
+  @override
+  State<DetailsBody> createState() => _DetailsBodyState();
+}
+
+class _DetailsBodyState extends State<DetailsBody> {
   @override
   Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -26,8 +31,15 @@ class DetailsBody extends StatelessWidget {
           ),
           const SizedBox(height: kVerticalSpace),
           SaveButton(
-            onPressed: () =>
-                context.read<DetailsCubit>().onPressedSaveButton(context),
+            onPressed: () async {
+              final shouldContinue = await context
+                  .read<DetailsCubit>()
+                  .onPressedSaveButton(context);
+              if (!shouldContinue) return;
+              if (!mounted) return;
+              context.read<TodoCubit>().loadTasks();
+              context.read<DetailsCubit>().onTapBackButton(context);
+            },
           ),
         ],
       );
